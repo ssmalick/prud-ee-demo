@@ -1,0 +1,24 @@
+version: 1
+
+# Build arguments
+build_arg_defaults:
+  # arguments to ansible-galaxy CLI e.g. -c to skip SSL verification
+  ANSIBLE_GALAXY_CLI_COLLECTION_OPTS: "-v"
+  EE_BASE_IMAGE: registry.redhat.io/ansible-automation-platform-24/ee-minimal-rhel8:latest
+
+# Path to ansible.cfg relative to the definition file
+# ansible_config: "./ansible.cfg"
+
+# Requirements files
+dependencies:
+  galaxy: requirements.yml
+  python: requirements.txt
+  system: bindep.txt
+
+# Command for custom build steps
+additional_build_steps:
+  prepend: |
+    RUN whoami
+    RUN cat /etc/os-release
+  append:
+    - RUN echo This is a post-install command!

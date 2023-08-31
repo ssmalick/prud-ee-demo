@@ -1,0 +1,4 @@
+# A requirements.yml file for Galaxy
+collections:
+  - containers.podman
+  - infra.ee_utilities

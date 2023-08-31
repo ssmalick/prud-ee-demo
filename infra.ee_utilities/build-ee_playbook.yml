@@ -1,0 +1,14 @@
+---
+- name: Playbook to create custom EE
+  hosts: localhost
+  gather_facts: false
+
+  pre_tasks:
+    - name: Create ee_builder_dir if it doesn't exist
+      ansible.builtin.file:
+        path: "{{ ee_builder_dir }}"
+        state: directory
+        mode: '0755'
+  
+  roles:
+    - infra.ee_utilities.ee_builder

@@ -1,0 +1,56 @@
+# For controller configuration definition
+ee_build_arg_defaults:
+  ANSIBLE_GALAXY_CLI_COLLECTION_OPTS: '-v --pre'
+ 
+# Be carefull with the following ... CAN/WILL DELETE FILES IN ee_builder_dir:
+ee_builder_dir_clean: false # <===
+ee_builder_dir: "{{ playbook_dir }}/_build_dir"
+ 
+ee_prune_images: false # <=== pruning can fail if image is used
+ee_base_image: registry.redhat.io/ansible-automation-platform-24/ee-supported-rhel8:latest
+# ee_reg_credential: Automation Hub Container Registry
+ee_stream: downstream # <=== Needed for RH base images otherwise will use dnf and fail
+# ee_update_base_images: true
+ee_base_registry_username: RH_REGISTRY_USERNAME
+ee_base_registry_password: RH_REGISTRY_PASSWORD
+# used to created ansible.cfg needed for pulling collection from PAH
+ee_pull_collections_from_hub: true
+ah_host: PAH_URL
+ah_token: PAH_TOKEN
+ 
+ee_image_push: true
+ee_registry_dest: PAH_URL
+ee_registry_username: PAH_USERNAME
+ee_registry_password: PAH_PASSWORD
+
+# Pushing EE to automation controller
+ee_create_controller_def: true
+
+ee_verbosity: 1
+
+ee_list:
+  - name: custom_ee
+    alt_name: Custom EE
+    tag: 1-11-21-2
+    dependencies:
+      system:
+        - podman
+      python:
+        - boto>=2.49.0
+        - botocore>=1.12.249
+        - pytz
+        - ansible-builder
+      galaxy:
+        collections:
+          - name: containers.podman
+            version: 1.10.3
+            source: https://galaxy.ansible.com
+          - name: infra.ee_utilities
+            version: 3.1.2
+            source: https://galaxy.ansible.com
+    build_steps:
+      prepend_final:
+        - RUN whoami
+        - RUN cat /etc/os-release
+      append_final:
+        - RUN echo This is a post-install command!
